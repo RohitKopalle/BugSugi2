@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.gstatic.com https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; connect-src 'self' https://ce.judge0.com https://firestore.googleapis.com https://*.firebaseio.com; img-src 'self' data:; media-src 'self'; font-src 'self' https://cdn.jsdelivr.net data:; worker-src blob:;">
+  <title>Bug Fixing Exam</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div id="startOverlay" style="position:fixed;top:0;left:0;width:100%;height:100%;background:#020617;z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;">
+  <h2 style="color:white;font-size:36px;margin-bottom:20px;">Ready to begin?</h2>
+  <p style="color:#22c55e;font-size:18px;margin-bottom:30px;">Click the button below to enter Fullscreen and start the timer.</p>
+  <button onclick="initExam()" style="padding:15px 30px;font-size:20px;background:#22c55e;color:black;border:none;border-radius:10px;cursor:pointer;font-weight:bold;box-shadow: 0 0 15px rgba(34, 197, 94, 0.4);">Enter Fullscreen &amp; Start Exam</button>
+</div>
+
+<div class="topbar">
+  <h2 id="timer">60:00</h2>
+  <h3>Team: <span id="teamName"></span></h3>
+</div>
+
+<div id="questions" class="questions"></div>
+
+<div class="submitBox">
+  <button onclick="submitExam()">Submit Exam</button>
+</div>
+
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+
+<!-- Monaco Editor -->
+<script src="https://cdn.jsdelivr.net/npm/monaco-editor@0.44.0/min/vs/loader.js"></script>
+
+<!-- Configuration -->
+<script src="config.js"></script>
+
+<!-- Main JS -->
+<script src="script.js"></script>
+
+</body>
+</html>

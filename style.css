@@ -1,0 +1,147 @@
+body {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background: #0f172a;
+  color: white;
+  overflow-x: hidden;
+}
+
+/* TOP BAR */
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 20px;
+  background: #020617;
+  border-bottom: 2px solid #22c55e;
+  animation: slideDown 0.5s ease;
+}
+
+/* QUESTIONS GRID */
+.questions {
+  padding: 20px;
+}
+
+/* CARD */
+.card {
+  background: #020617;
+  padding: 20px;
+  margin-bottom: 25px;
+  border-radius: 12px;
+  border: 1px solid #1e293b;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+}
+
+/* EDITOR */
+.editor {
+  height: 200px;
+  border: 1px solid #334155;
+  border-radius: 6px;
+  margin-top: 10px;
+}
+
+/* BUTTON */
+button {
+  margin-top: 10px;
+  padding: 8px 15px;
+  background: #22c55e;
+  border: none;
+  cursor: pointer;
+  border-radius: 6px;
+  font-weight: bold;
+  transition: all 0.3s ease;
+}
+
+button:hover {
+  background: #16a34a;
+  transform: scale(1.05);
+}
+
+/* OUTPUT */
+pre {
+  background: black;
+  color: lime;
+  padding: 10px;
+  margin-top: 10px;
+  min-height: 60px;
+  border-radius: 5px;
+}
+
+/* ANIMATIONS */
+@keyframes slideDown {
+  from { transform: translateY(-50px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.submitBox button {
+  position: relative;   /* 🔥 REQUIRED */
+  left: 50%;
+  bottom: 20px;
+  transform: translateX(-50%);
+
+  background: #22c55e;
+  border: none;
+  cursor: pointer;
+  border-radius: 6px;
+  font-weight: bold;
+  transition: all 0.3s ease;
+  padding: 10px 20px;
+}
+
+#team{
+  position: fixed;
+  top: 54%;
+  left: 42%;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #334155;
+  background: #020617;
+  color: white;
+  width: 220px;
+  height: 30px;
+}
+
+#pass{
+  position: fixed;
+  top: 64%;
+  left: 42%;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #334155;
+  background: #020617;
+  color: white;
+  width: 220px;
+  height: 30px;
+}
+
+#logbtn{
+  position: fixed;
+  top: 74%;
+  left: 42.5%;
+  
+  width: 220px;
+  height: 30px;
+
+  padding: 8px 15px;
+  background: #22c55e;
+  border: none;
+  cursor: pointer;
+  border-radius: 6px;
+  font-weight: bold;
+  transition: all 0.3s ease;
+}
+
+#h1 {
+  display: inline-block;
+  border-radius: 10px;
+  border: 2px dotted white;
+  background: black;
+  padding: 10px 20px;
+}
+
+
