@@ -77,15 +77,15 @@ const teams = {
 function hashPassword(password) {
   function md5(string) {
     function RotateLeft(lValue, iShiftBits) {
-      return (lValue<<iShiftBits) | (lValue>>>(32-iShiftBits));
+      return (lValue << iShiftBits) | (lValue >>> (32 - iShiftBits));
     }
-    function AddUnsigned(lX,lY) {
-      var lX4,lY4,lX8,lY8,lResult;
+    function AddUnsigned(lX, lY) {
+      var lX4, lY4, lX8, lY8, lResult;
       lX8 = (lX & 0x80000000);
       lY8 = (lY & 0x80000000);
       lX4 = (lX & 0x40000000);
       lY4 = (lY & 0x40000000);
-      lResult = (lX & 0x3FFFFFFF)+(lY & 0x3FFFFFFF);
+      lResult = (lX & 0x3FFFFFFF) + (lY & 0x3FFFFFFF);
       if (lX4 & lY4) {
         return (lResult ^ 0x80000000 ^ lX8 ^ lY8);
       }
@@ -99,71 +99,71 @@ function hashPassword(password) {
         return (lResult ^ lX8 ^ lY8);
       }
     }
-    function F(x,y,z) { return (x & y) | ((~x) & z); }
-    function G(x,y,z) { return (x & z) | (y & (~z)); }
-    function H(x,y,z) { return (x ^ y ^ z); }
-    function I(x,y,z) { return (y ^ (x | (~z))); }
-    function FF(a,b,c,d,x,s,ac) {
+    function F(x, y, z) { return (x & y) | ((~x) & z); }
+    function G(x, y, z) { return (x & z) | (y & (~z)); }
+    function H(x, y, z) { return (x ^ y ^ z); }
+    function I(x, y, z) { return (y ^ (x | (~z))); }
+    function FF(a, b, c, d, x, s, ac) {
       a = AddUnsigned(a, AddUnsigned(AddUnsigned(F(b, c, d), x), ac));
       return AddUnsigned(RotateLeft(a, s), b);
     }
-    function GG(a,b,c,d,x,s,ac) {
+    function GG(a, b, c, d, x, s, ac) {
       a = AddUnsigned(a, AddUnsigned(AddUnsigned(G(b, c, d), x), ac));
       return AddUnsigned(RotateLeft(a, s), b);
     }
-    function HH(a,b,c,d,x,s,ac) {
+    function HH(a, b, c, d, x, s, ac) {
       a = AddUnsigned(a, AddUnsigned(AddUnsigned(H(b, c, d), x), ac));
       return AddUnsigned(RotateLeft(a, s), b);
     }
-    function II(a,b,c,d,x,s,ac) {
+    function II(a, b, c, d, x, s, ac) {
       a = AddUnsigned(a, AddUnsigned(AddUnsigned(I(b, c, d), x), ac));
       return AddUnsigned(RotateLeft(a, s), b);
     }
     function ConvertToWordArray(string) {
       var lWordCount;
       var lMessageLength = string.length;
-      var lNumberOfWords_temp1=lMessageLength + 8;
-      var lNumberOfWords_temp2=(lNumberOfWords_temp1-(lNumberOfWords_temp1 % 64))/64;
-      var lNumberOfWords = (lNumberOfWords_temp2+1)*16;
-      var lWordArray=Array(lNumberOfWords-1);
+      var lNumberOfWords_temp1 = lMessageLength + 8;
+      var lNumberOfWords_temp2 = (lNumberOfWords_temp1 - (lNumberOfWords_temp1 % 64)) / 64;
+      var lNumberOfWords = (lNumberOfWords_temp2 + 1) * 16;
+      var lWordArray = Array(lNumberOfWords - 1);
       var lBytePosition = 0;
       var lByteCount = 0;
-      while ( lByteCount < lMessageLength ) {
-        lWordCount = (lByteCount-(lByteCount % 4))/4;
-        lBytePosition = (lByteCount % 4)*8;
-        lWordArray[lWordCount] = (lWordArray[lWordCount] | (string.charCodeAt(lByteCount)<<lBytePosition));
+      while (lByteCount < lMessageLength) {
+        lWordCount = (lByteCount - (lByteCount % 4)) / 4;
+        lBytePosition = (lByteCount % 4) * 8;
+        lWordArray[lWordCount] = (lWordArray[lWordCount] | (string.charCodeAt(lByteCount) << lBytePosition));
         lByteCount++;
       }
-      lWordCount = (lByteCount-(lByteCount % 4))/4;
-      lBytePosition = (lByteCount % 4)*8;
-      lWordArray[lWordCount] = lWordArray[lWordCount] | (0x80<<lBytePosition);
-      lWordArray[lNumberOfWords-2] = lMessageLength<<3;
-      lWordArray[lNumberOfWords-1] = lMessageLength>>>29;
+      lWordCount = (lByteCount - (lByteCount % 4)) / 4;
+      lBytePosition = (lByteCount % 4) * 8;
+      lWordArray[lWordCount] = lWordArray[lWordCount] | (0x80 << lBytePosition);
+      lWordArray[lNumberOfWords - 2] = lMessageLength << 3;
+      lWordArray[lNumberOfWords - 1] = lMessageLength >>> 29;
       return lWordArray;
     }
     function WordToHex(lValue) {
-      var WordToHexValue="",WordToHexValue_temp="",lByte,lCount;
-      for (lCount = 0;lCount<=3;lCount++) {
-        lByte = (lValue>>>(lCount*8)) & 255;
+      var WordToHexValue = "", WordToHexValue_temp = "", lByte, lCount;
+      for (lCount = 0; lCount <= 3; lCount++) {
+        lByte = (lValue >>> (lCount * 8)) & 255;
         WordToHexValue_temp = "0" + lByte.toString(16);
-        WordToHexValue = WordToHexValue + WordToHexValue_temp.substr(WordToHexValue_temp.length-2,2);
+        WordToHexValue = WordToHexValue + WordToHexValue_temp.substr(WordToHexValue_temp.length - 2, 2);
       }
       return WordToHexValue;
     }
-    var x=Array();
-    var k,AA,BB,CC,DD,a,b,c,d;
-    var S11=7, S12=12, S13=17, S14=22;
-    var S21=5, S22=9 , S23=14, S24=20;
-    var S31=4, S32=11, S33=16, S34=23;
-    var S41=6, S42=10, S43=15, S44=21;
-    string = string.replace(/\r\n/g,"\n");
+    var x = Array();
+    var k, AA, BB, CC, DD, a, b, c, d;
+    var S11 = 7, S12 = 12, S13 = 17, S14 = 22;
+    var S21 = 5, S22 = 9, S23 = 14, S24 = 20;
+    var S31 = 4, S32 = 11, S33 = 16, S34 = 23;
+    var S41 = 6, S42 = 10, S43 = 15, S44 = 21;
+    string = string.replace(/\r\n/g, "\n");
     var utftext = "";
     for (var n = 0; n < string.length; n++) {
       var c = string.charCodeAt(n);
       if (c < 128) {
         utftext += String.fromCharCode(c);
       }
-      else if((c > 127) && (c < 2048)) {
+      else if ((c > 127) && (c < 2048)) {
         utftext += String.fromCharCode((c >> 6) | 192);
         utftext += String.fromCharCode((c & 63) | 128);
       }
@@ -175,78 +175,78 @@ function hashPassword(password) {
     }
     x = ConvertToWordArray(utftext);
     a = 0x67452301; b = 0xEFCDAB89; c = 0x98BADCFE; d = 0x10325476;
-    for (k=0;k<x.length;k+=16) {
-      AA=a; BB=b; CC=c; DD=d;
-      a=FF(a,b,c,d,x[k+0], S11,0xD76AA478);
-      d=FF(d,a,b,c,x[k+1], S12,0xE8C7B756);
-      c=FF(c,d,a,b,x[k+2], S13,0x242070DB);
-      b=FF(b,c,d,a,x[k+3], S14,0xC1BDCEEE);
-      a=FF(a,b,c,d,x[k+4], S11,0xF57C0FAF);
-      d=FF(d,a,b,c,x[k+5], S12,0x4787C62A);
-      c=FF(c,d,a,b,x[k+6], S13,0xA8304613);
-      b=FF(b,c,d,a,x[k+7], S14,0xFD469501);
-      a=FF(a,b,c,d,x[k+8], S11,0x698098D8);
-      d=FF(d,a,b,c,x[k+9], S12,0x8B44F7AF);
-      c=FF(c,d,a,b,x[k+10],S13,0xFFFF5BB1);
-      b=FF(b,c,d,a,x[k+11],S14,0x895CD7BE);
-      a=FF(a,b,c,d,x[k+12],S11,0x6B901122);
-      d=FF(d,a,b,c,x[k+13],S12,0xFD987193);
-      c=FF(c,d,a,b,x[k+14],S13,0xA679438E);
-      b=FF(b,c,d,a,x[k+15],S14,0x49B40821);
-      a=GG(a,b,c,d,x[k+1], S21,0xF61E2562);
-      d=GG(d,a,b,c,x[k+6], S22,0xC040B340);
-      c=GG(c,d,a,b,x[k+11],S23,0x265E5A51);
-      b=GG(b,c,d,a,x[k+0], S24,0xE9B6C7AA);
-      a=GG(a,b,c,d,x[k+5], S21,0xD62F105D);
-      d=GG(d,a,b,c,x[k+10],S22,0x2441453);
-      c=GG(c,d,a,b,x[k+15],S23,0xD8A1E681);
-      b=GG(b,c,d,a,x[k+4], S24,0xE7D3FBC8);
-      a=GG(a,b,c,d,x[k+9], S21,0x21E1CDE6);
-      d=GG(d,a,b,c,x[k+14],S22,0xC33707D6);
-      c=GG(c,d,a,b,x[k+3], S23,0xF4D50D87);
-      b=GG(b,c,d,a,x[k+8], S24,0x455A14ED);
-      a=GG(a,b,c,d,x[k+13],S21,0xA9E3E905);
-      d=GG(d,a,b,c,x[k+2], S22,0xFCEFA3F8);
-      c=GG(c,d,a,b,x[k+7], S23,0x676F02D9);
-      b=GG(b,c,d,a,x[k+12],S24,0x8D2A4C8A);
-      a=HH(a,b,c,d,x[k+5], S31,0xFFFA3942);
-      d=HH(d,a,b,c,x[k+8], S32,0x8771F681);
-      c=HH(c,d,a,b,x[k+11],S33,0x6D9D6122);
-      b=HH(b,c,d,a,x[k+14],S34,0xFDE5380C);
-      a=HH(a,b,c,d,x[k+1], S31,0xA4BEEA44);
-      d=HH(d,a,b,c,x[k+4], S32,0x4BDECFA9);
-      c=HH(c,d,a,b,x[k+7], S33,0xF6BB4B60);
-      b=HH(b,c,d,a,x[k+10],S34,0xBEBFBC70);
-      a=HH(a,b,c,d,x[k+13],S31,0x289B7EC6);
-      d=HH(d,a,b,c,x[k+0], S32,0xEAA127FA);
-      c=HH(c,d,a,b,x[k+3], S33,0xD4EF3085);
-      b=HH(b,c,d,a,x[k+6], S34,0x4881D05);
-      a=HH(a,b,c,d,x[k+9], S31,0xD9D4D039);
-      d=HH(d,a,b,c,x[k+12],S32,0xE6DB99E5);
-      c=HH(c,d,a,b,x[k+15],S33,0x1FA27CF8);
-      b=HH(b,c,d,a,x[k+2], S34,0xC4AC5665);
-      a=II(a,b,c,d,x[k+0], S41,0xF4292244);
-      d=II(d,a,b,c,x[k+7], S42,0x432AFF97);
-      c=II(c,d,a,b,x[k+14],S43,0xAB9423A7);
-      b=II(b,c,d,a,x[k+5], S44,0xFC93A039);
-      a=II(a,b,c,d,x[k+12],S41,0x655B59C3);
-      d=II(d,a,b,c,x[k+3], S42,0x8F0CCC92);
-      c=II(c,d,a,b,x[k+10],S43,0xFFEFF47D);
-      b=II(b,c,d,a,x[k+1], S44,0x85845DD1);
-      a=II(a,b,c,d,x[k+8], S41,0x6FA87E4F);
-      d=II(d,a,b,c,x[k+15],S42,0xFE2CE6E0);
-      c=II(c,d,a,b,x[k+6], S43,0xA3014314);
-      b=II(b,c,d,a,x[k+13],S44,0x4E0811A1);
-      a=II(a,b,c,d,x[k+4], S41,0xF7537E82);
-      d=II(d,a,b,c,x[k+11],S42,0xBD3AF235);
-      c=II(c,d,a,b,x[k+2], S43,0x2AD7D2BB);
-      b=II(b,c,d,a,x[k+9], S44,0xEB86D391);
-      a=AddUnsigned(a,AA);
-      b=AddUnsigned(b,BB);
-      c=AddUnsigned(c,CC);
-      d=AddUnsigned(d,DD);
+    for (k = 0; k < x.length; k += 16) {
+      AA = a; BB = b; CC = c; DD = d;
+      a = FF(a, b, c, d, x[k + 0], S11, 0xD76AA478);
+      d = FF(d, a, b, c, x[k + 1], S12, 0xE8C7B756);
+      c = FF(c, d, a, b, x[k + 2], S13, 0x242070DB);
+      b = FF(b, c, d, a, x[k + 3], S14, 0xC1BDCEEE);
+      a = FF(a, b, c, d, x[k + 4], S11, 0xF57C0FAF);
+      d = FF(d, a, b, c, x[k + 5], S12, 0x4787C62A);
+      c = FF(c, d, a, b, x[k + 6], S13, 0xA8304613);
+      b = FF(b, c, d, a, x[k + 7], S14, 0xFD469501);
+      a = FF(a, b, c, d, x[k + 8], S11, 0x698098D8);
+      d = FF(d, a, b, c, x[k + 9], S12, 0x8B44F7AF);
+      c = FF(c, d, a, b, x[k + 10], S13, 0xFFFF5BB1);
+      b = FF(b, c, d, a, x[k + 11], S14, 0x895CD7BE);
+      a = FF(a, b, c, d, x[k + 12], S11, 0x6B901122);
+      d = FF(d, a, b, c, x[k + 13], S12, 0xFD987193);
+      c = FF(c, d, a, b, x[k + 14], S13, 0xA679438E);
+      b = FF(b, c, d, a, x[k + 15], S14, 0x49B40821);
+      a = GG(a, b, c, d, x[k + 1], S21, 0xF61E2562);
+      d = GG(d, a, b, c, x[k + 6], S22, 0xC040B340);
+      c = GG(c, d, a, b, x[k + 11], S23, 0x265E5A51);
+      b = GG(b, c, d, a, x[k + 0], S24, 0xE9B6C7AA);
+      a = GG(a, b, c, d, x[k + 5], S21, 0xD62F105D);
+      d = GG(d, a, b, c, x[k + 10], S22, 0x2441453);
+      c = GG(c, d, a, b, x[k + 15], S23, 0xD8A1E681);
+      b = GG(b, c, d, a, x[k + 4], S24, 0xE7D3FBC8);
+      a = GG(a, b, c, d, x[k + 9], S21, 0x21E1CDE6);
+      d = GG(d, a, b, c, x[k + 14], S22, 0xC33707D6);
+      c = GG(c, d, a, b, x[k + 3], S23, 0xF4D50D87);
+      b = GG(b, c, d, a, x[k + 8], S24, 0x455A14ED);
+      a = GG(a, b, c, d, x[k + 13], S21, 0xA9E3E905);
+      d = GG(d, a, b, c, x[k + 2], S22, 0xFCEFA3F8);
+      c = GG(c, d, a, b, x[k + 7], S23, 0x676F02D9);
+      b = GG(b, c, d, a, x[k + 12], S24, 0x8D2A4C8A);
+      a = HH(a, b, c, d, x[k + 5], S31, 0xFFFA3942);
+      d = HH(d, a, b, c, x[k + 8], S32, 0x8771F681);
+      c = HH(c, d, a, b, x[k + 11], S33, 0x6D9D6122);
+      b = HH(b, c, d, a, x[k + 14], S34, 0xFDE5380C);
+      a = HH(a, b, c, d, x[k + 1], S31, 0xA4BEEA44);
+      d = HH(d, a, b, c, x[k + 4], S32, 0x4BDECFA9);
+      c = HH(c, d, a, b, x[k + 7], S33, 0xF6BB4B60);
+      b = HH(b, c, d, a, x[k + 10], S34, 0xBEBFBC70);
+      a = HH(a, b, c, d, x[k + 13], S31, 0x289B7EC6);
+      d = HH(d, a, b, c, x[k + 0], S32, 0xEAA127FA);
+      c = HH(c, d, a, b, x[k + 3], S33, 0xD4EF3085);
+      b = HH(b, c, d, a, x[k + 6], S34, 0x4881D05);
+      a = HH(a, b, c, d, x[k + 9], S31, 0xD9D4D039);
+      d = HH(d, a, b, c, x[k + 12], S32, 0xE6DB99E5);
+      c = HH(c, d, a, b, x[k + 15], S33, 0x1FA27CF8);
+      b = HH(b, c, d, a, x[k + 2], S34, 0xC4AC5665);
+      a = II(a, b, c, d, x[k + 0], S41, 0xF4292244);
+      d = II(d, a, b, c, x[k + 7], S42, 0x432AFF97);
+      c = II(c, d, a, b, x[k + 14], S43, 0xAB9423A7);
+      b = II(b, c, d, a, x[k + 5], S44, 0xFC93A039);
+      a = II(a, b, c, d, x[k + 12], S41, 0x655B59C3);
+      d = II(d, a, b, c, x[k + 3], S42, 0x8F0CCC92);
+      c = II(c, d, a, b, x[k + 10], S43, 0xFFEFF47D);
+      b = II(b, c, d, a, x[k + 1], S44, 0x85845DD1);
+      a = II(a, b, c, d, x[k + 8], S41, 0x6FA87E4F);
+      d = II(d, a, b, c, x[k + 15], S42, 0xFE2CE6E0);
+      c = II(c, d, a, b, x[k + 6], S43, 0xA3014314);
+      b = II(b, c, d, a, x[k + 13], S44, 0x4E0811A1);
+      a = II(a, b, c, d, x[k + 4], S41, 0xF7537E82);
+      d = II(d, a, b, c, x[k + 11], S42, 0xBD3AF235);
+      c = II(c, d, a, b, x[k + 2], S43, 0x2AD7D2BB);
+      b = II(b, c, d, a, x[k + 9], S44, 0xEB86D391);
+      a = AddUnsigned(a, AA);
+      b = AddUnsigned(b, BB);
+      c = AddUnsigned(c, CC);
+      d = AddUnsigned(d, DD);
     }
-    var temp = WordToHex(a)+WordToHex(b)+WordToHex(c)+WordToHex(d);
+    var temp = WordToHex(a) + WordToHex(b) + WordToHex(c) + WordToHex(d);
     return temp.toLowerCase();
   }
   return md5(password);
@@ -263,7 +263,7 @@ const LOCKOUT_TIME = 15 * 60 * 1000; // 15 minutes
 function isRateLimited(teamId) {
   const attempts = loginAttempts[teamId];
   if (!attempts) return false;
-  
+
   if (attempts.count >= MAX_ATTEMPTS) {
     const timePassed = Date.now() - attempts.firstAttempt;
     if (timePassed < LOCKOUT_TIME) {
@@ -321,7 +321,7 @@ function login() {
   }
 
   const hashedPassword = hashPassword(p);
-  
+
   if (teams[t] === hashedPassword) {
     resetLoginAttempts(t);
     localStorage.setItem("team", t);
@@ -331,8 +331,8 @@ function login() {
     recordFailedAttempt(t);
     const attempts = loginAttempts[t]?.count || 0;
     const remaining = MAX_ATTEMPTS - attempts;
-    const errorMsg = remaining > 0 ? 
-      `Invalid login credentials. ${remaining} attempts remaining.` : 
+    const errorMsg = remaining > 0 ?
+      `Invalid login credentials. ${remaining} attempts remaining.` :
       "Too many failed attempts. Account locked for 15 minutes.";
     showError(errorMsg);
   }
@@ -363,7 +363,7 @@ if (window.location.pathname.includes("exam.html")) {
       firebase.initializeApp(firebaseConfig);
     }
     db = firebase.firestore();
-    
+
     // Configure Firebase security rules
     db.settings({
       timestampsInSnapshots: true
@@ -409,7 +409,7 @@ if (window.location.pathname.includes("exam.html")) {
 // Redirect to login if not authenticated on protected pages
 if (
   (window.location.pathname.includes("exam.html") ||
-   window.location.pathname.includes("instructions.html")) &&
+    window.location.pathname.includes("instructions.html")) &&
   !localStorage.getItem("team")
 ) {
   window.location = "index.html";
@@ -434,7 +434,7 @@ let endTime = null;
 
 function startTimer() {
   const teamId = localStorage.getItem("team") || "unknown";
-  
+
   // Restore or initialize start time for accurate timeTaken calculation
   let savedStart = localStorage.getItem("examStartTime_" + teamId);
   if (savedStart && parseInt(savedStart) > 0) {
@@ -458,7 +458,7 @@ function startTimer() {
     }
   } else {
     // No saved timer — brand new exam — start fresh (1 hour)
-    endTime = Date.now() + 3600 * 1000; 
+    endTime = Date.now() + 3600 * 1000;
     localStorage.setItem("examEndTime_" + teamId, endTime);
   }
 
@@ -503,20 +503,20 @@ async function runCode(i) {
 
   try {
     const code = editors[i].getValue();
-    
+
     // Security: Validate code input
     if (!code || typeof code !== 'string') {
       outEl.textContent = "❌ Invalid code input.";
       return;
     }
-    
+
     // Security: Check code length
     const maxLength = window.CONFIG?.SECURITY_CONFIG?.maxCodeLength || 5000;
     if (code.length > maxLength) {
       outEl.textContent = `❌ Code too long. Maximum ${maxLength} characters allowed.`;
       return;
     }
-    
+
     // Security: Basic code sanitization — only block truly dangerous imports
     const sanitizedCode = sanitizeCode(code);
     if (sanitizedCode !== code) {
@@ -528,10 +528,10 @@ async function runCode(i) {
       apiUrl: "https://ce.judge0.com/submissions",
       timeout: 10000
     };
-    
+
     const url = `${judge0Config.apiUrl}?base64_encoded=false&wait=true`;
     const timeout = judge0Config.timeout || 10000;
-    
+
     // Create abort controller for timeout
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), timeout);
@@ -544,7 +544,7 @@ async function runCode(i) {
       },
       body: JSON.stringify({
         source_code: sanitizedCode,
-        language_id: pool[i].languageId, 
+        language_id: pool[i].languageId,
         stdin: "",
         expected_output: "",
         cpu_time_limit: 2,
@@ -562,18 +562,18 @@ async function runCode(i) {
     }
 
     const data = await res.json();
-    
+
     // Security: Validate response data
     if (data.error) {
       outEl.textContent = `❌ Execution error: ${data.error}`;
       return;
     }
-    
+
     const output = data.stdout || data.stderr || data.compile_output || "No Output";
-    
+
     // Security: Use textContent instead of innerHTML to prevent XSS
     outEl.textContent = typeof output === 'string' ? output.substring(0, 1000) : String(output);
-    
+
   } catch (error) {
     if (error.name === 'AbortError') {
       outEl.textContent = "❌ Code execution timed out.";
@@ -603,12 +603,12 @@ function sanitizeCode(code) {
     /eval\s*\(/gi,
     /compile\s*\(\s*['"]/gi
   ];
-  
+
   let sanitized = code;
   dangerousPatterns.forEach(pattern => {
     sanitized = sanitized.replace(pattern, '# BLOCKED: $&');
   });
-  
+
   return sanitized;
 }
 
@@ -621,10 +621,10 @@ if (window.location.pathname.includes("exam.html")) {
   document.addEventListener("contextmenu", e => e.preventDefault());
 
   // Block dangerous shortcuts but ALLOW editor shortcuts
-  document.onkeydown = function(e) {
+  document.onkeydown = function (e) {
     // Allow Ctrl+Z (undo), Ctrl+Y (redo), Ctrl+A (select all), Ctrl+D (duplicate line)
     const allowedCtrl = ["z", "y", "a", "d"];
-    
+
     if (e.ctrlKey) {
       if (allowedCtrl.includes(e.key.toLowerCase())) {
         return true; // allow these in editor
@@ -634,7 +634,7 @@ if (window.location.pathname.includes("exam.html")) {
     }
 
     if (e.key === "F12") { e.preventDefault(); return false; }
-    if (e.key === "F5")  { e.preventDefault(); return false; }
+    if (e.key === "F5") { e.preventDefault(); return false; }
     if (e.key === "F11") { e.preventDefault(); return false; }
 
     // Block Alt+F4 hint (can't fully prevent OS-level)
@@ -648,7 +648,7 @@ if (window.location.pathname.includes("exam.html")) {
 function lockdownEditors() {
   editors.forEach((editor, i) => {
     const currentContent = editor.getValue();
-    editor.updateOptions({ 
+    editor.updateOptions({
       readOnly: true,
       domReadOnly: true,
       scrollBeyondLastLine: false,
@@ -661,24 +661,24 @@ function lockdownEditors() {
       renderIndentGuides: false,
       renderLineNumbers: 'off'
     });
-    
+
     // Force content to remain unchanged
     editor.setValue(currentContent);
-    
+
     // Add content protection
     editor.onDidChangeModelContent(() => {
       setTimeout(() => { editor.setValue(currentContent); }, 0);
     });
-    
+
     // Disable keyboard shortcuts
     if (typeof monaco !== 'undefined') {
-      editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyZ, () => {});
-      editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyY, () => {});
-      editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyA, () => {});
-      editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyC, () => {});
-      editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyV, () => {});
+      editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyZ, () => { });
+      editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyY, () => { });
+      editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyA, () => { });
+      editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyC, () => { });
+      editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyV, () => { });
     }
-    
+
     // Disable mouse and keyboard interactions
     editor.onMouseDown(() => false);
     editor.onKeyDown(() => false);
@@ -695,7 +695,7 @@ function submitExam() {
   if (!confirm("Are you sure you want to submit?")) return;
 
   examSubmitted = true;
-  
+
   // Disable submit button immediately
   const submitBtn = document.querySelector(".submitBox button");
   if (submitBtn) {
@@ -733,22 +733,22 @@ function submitExam() {
       timeTaken: timeTaken,
       timestamp: new Date()
     })
-    .then(() => {
-      window.onbeforeunload = null;
-      document.querySelectorAll("button").forEach(btn => {
-        btn.disabled = true;
+      .then(() => {
+        window.onbeforeunload = null;
+        document.querySelectorAll("button").forEach(btn => {
+          btn.disabled = true;
+        });
+        document.body.innerHTML = `<h1 style="color:white;text-align:center;margin-top:200px;">✅ Submitted Successfully<br>Team: ${safeTeam}<br>Time: ${Math.floor(timeTaken / 60)}m ${timeTaken % 60}s</h1>`;
+      })
+      .catch((error) => {
+        const btn = document.querySelector(".submitBox button");
+        if (btn) {
+          btn.innerText = "❌ Error saving! Try again";
+          setTimeout(() => btn.innerText = "Submit Exam", 3000);
+        }
+        console.error(error);
+        examSubmitted = false;
       });
-      document.body.innerHTML = `<h1 style="color:white;text-align:center;margin-top:200px;">✅ Submitted Successfully<br>Team: ${safeTeam}<br>Time: ${Math.floor(timeTaken/60)}m ${timeTaken%60}s</h1>`;
-    })
-    .catch((error) => {
-      const btn = document.querySelector(".submitBox button");
-      if(btn) { 
-        btn.innerText = "❌ Error saving! Try again"; 
-        setTimeout(() => btn.innerText="Submit Exam", 3000); 
-      }
-      console.error(error);
-      examSubmitted = false;
-    });
   });
 }
 
@@ -785,7 +785,7 @@ function forceSubmit(reasonMsg, isMalpractice = true) {
         timeTaken: timeTaken,
         timestamp: new Date()
       };
-      
+
       if (isMalpractice) {
         payload.malpractice = true;
         payload.malpracticeReason = reasonMsg || "Unknown";
@@ -798,7 +798,7 @@ function forceSubmit(reasonMsg, isMalpractice = true) {
   }
 
   window.onbeforeunload = null;
-  
+
   if (isMalpractice) {
     const reasonHtml = safeReason ? `<br><br><span style="font-size:24px;color:#f87171;">Reason: ${safeReason}</span>` : "";
     document.body.innerHTML = `<h1 style='color:#ef4444;text-align:center;margin-top:200px;font-size:36px;'>❌ Exam Auto-Submitted<br>Malpractice Detected${reasonHtml}</h1>`;
@@ -816,15 +816,15 @@ function initExam() {
   document.documentElement.requestFullscreen().then(() => {
     const overlay = document.getElementById("startOverlay");
     if (overlay) overlay.style.display = "none";
-    setTimeout(() => { 
-        // mark fullscreen is ready to turn on malpractice monitors securely
-        window.fullscreenReady = true;
+    setTimeout(() => {
+      // mark fullscreen is ready to turn on malpractice monitors securely
+      window.fullscreenReady = true;
     }, 1000);
     loadQuestions();
     startTimer();
   }).catch(() => {
     const overlayBtn = document.querySelector("#startOverlay button");
-    if(overlayBtn) {
+    if (overlayBtn) {
       overlayBtn.innerText = "⚠️ Fullscreen blocked! Please click again";
       overlayBtn.style.background = "#f59e0b";
     }
@@ -838,7 +838,7 @@ function loadQuestions() {
   selected.forEach((q, i) => {
     container.innerHTML += `
       <div class="card">
-        <h3>Q${i+1}: ${escapeHtml(q.title)}</h3>
+        <h3>Q${i + 1}: ${escapeHtml(q.title)}</h3>
         <p style="color: #94a3b8; font-size: 14px; margin-bottom: 15px;">
           <strong style="color: #22c55e;">Expected Output:</strong><br>
           <code style="background: rgba(0,0,0,0.3); padding: 5px 8px; border-radius: 4px; display: block; margin-top: 5px; white-space: pre-wrap; font-family: 'Consolas', monospace; color: #bbf7d0; border-left: 3px solid #22c55e;">${escapeHtml(q.expectedOutput)}</code>
@@ -922,7 +922,7 @@ if (window.location.pathname.includes("exam.html")) {
 
     if (warnings === 1) {
       alertShowing = true;
-      
+
       const safeMsg = escapeHtml(msg);
       const warnOverlay = document.createElement("div");
       warnOverlay.id = "warnOverlay";
@@ -941,17 +941,17 @@ if (window.location.pathname.includes("exam.html")) {
           setTimeout(() => { alertShowing = false; malpracticeCooldown = false; }, 1000);
         }).catch(() => {
           let errT = document.getElementById("fsErrText");
-          if(!errT) {
-             errT = document.createElement("p");
-             errT.id = "fsErrText";
-             errT.style.color = "#fef08a";
-             errT.style.marginTop = "15px";
-             errT.innerText = "Fullscreen request blocked by browser. Please click again firmly.";
-             document.getElementById("warnOverlay").appendChild(errT);
+          if (!errT) {
+            errT = document.createElement("p");
+            errT.id = "fsErrText";
+            errT.style.color = "#fef08a";
+            errT.style.marginTop = "15px";
+            errT.innerText = "Fullscreen request blocked by browser. Please click again firmly.";
+            document.getElementById("warnOverlay").appendChild(errT);
           }
         });
       };
-      
+
     } else {
       alertShowing = true;
       forceSubmit(msg);

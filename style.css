@@ -34,7 +34,7 @@ body {
 
 .card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
 }
 
 /* EDITOR */
@@ -74,12 +74,20 @@ pre {
 
 /* ANIMATIONS */
 @keyframes slideDown {
-  from { transform: translateY(-50px); opacity: 0; }
-  to { transform: translateY(0); opacity: 1; }
+  from {
+    transform: translateY(-50px);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
 }
 
 .submitBox button {
-  position: relative;   /* 🔥 REQUIRED */
+  position: relative;
+  /* 🔥 REQUIRED */
   left: 50%;
   bottom: 20px;
   transform: translateX(-50%);
@@ -93,7 +101,7 @@ pre {
   padding: 10px 20px;
 }
 
-#team{
+#team {
   position: fixed;
   top: 54%;
   left: 42%;
@@ -106,7 +114,7 @@ pre {
   height: 30px;
 }
 
-#pass{
+#pass {
   position: fixed;
   top: 64%;
   left: 42%;
@@ -119,11 +127,11 @@ pre {
   height: 30px;
 }
 
-#logbtn{
+#logbtn {
   position: fixed;
   top: 74%;
   left: 42.5%;
-  
+
   width: 220px;
   height: 30px;
 
@@ -143,5 +151,3 @@ pre {
   background: black;
   padding: 10px 20px;
 }
-
-

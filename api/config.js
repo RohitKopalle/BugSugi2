@@ -1,25 +1,25 @@
 module.exports = function handler(req, res) {
   const QUESTIONS_POOL = [
     {
-      title: "Print the sum of all odd numbers in the list.",
-      initialCode: "nums = [2, 5, 8, 11, 14, 17, 20]\ntotal = 1\n\nfor i in range(len(nums)):\n    if nums[i] % 2 == 1:\n        total += nums\n\nprint(\"Sum =\", total)",
+      title: "Print the product of all numbers in the list.",
+      initialCode: "nums = [1, 2, 3, 4, 5]\nproduct = 0\nfor i in range(len(nums)):\n    product += nums[i]\nprint(\"Product =\", product)",
       language: "python",
       languageId: 71,
-      expectedOutput: "Sum = 33"
+      expectedOutput: "Product = 120"
     },
     {
-      title: "Print the factorial of 5.",
-      initialCode: "#include <stdio.h>\n\nint main() {\n    int n = 5, fact = 0;\n\n    for(int i = 1; i <= n; i++) {\n        fact *= i;\n    }\n\n    printf(\"Factorial = %d\", fact);\n    return 0;\n}",
+      title: "Print the sum of all numbers from 1 to n (inclusive).",
+      initialCode: "#include <stdio.h>\nint main() {\n    int n = 6;\n    int sum = 1;\n    for(int i = 1; i < n; i++) {\n        sum += i;\n    }\n    printf(\"Sum = %d\", sum);\n    return 0;\n}",
       language: "c",
       languageId: 54,
-      expectedOutput: "Factorial = 120"
+      expectedOutput: "Sum = 21"
     },
     {
-      title: "Print all elements of the list in reverse order.",
-      initialCode: "nums = [10, 20, 30, 40, 50]\n\nfor i in range(len(nums)-1, 0, -1):\n    print(nums[i])",
-      language: "python",
-      languageId: 71,
-      expectedOutput: "50\n40\n30\n20\n10"
+      title: "Print the first 8 terms of the Fibonacci sequence.",
+      initialCode: "#include <stdio.h>\nint main() {\n    int n = 8;\n    int a = 1, b = 0;\n    printf(\"%d %d \", a, b);\n    for(int i = 0; i < n; i++) {\n        int c = a * b;\n        a = b;\n        b = c;\n        printf(\"%d \", a);\n    }\n    return 0;\n}",
+      language: "c",
+      languageId: 54,
+      expectedOutput: "0 1 1 2 3 5 8 13"
     },
     {
       title: "Count how many even numbers are present in the array.",
