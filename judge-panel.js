@@ -605,33 +605,39 @@ function loadQuestionsForGrading(submission) {
     return;
   }
   
-  // Question descriptions from the pool
-  const sampleQuestions = [
-    { id: 1, text: "Fix this code: print(\"Hello)", maxScore: 20 },
-    { id: 2, text: "Fix this loop: for i in range(5)\\n  print(i)", maxScore: 20 },
-    { id: 3, text: "Fix this array issue: arr = [1,2,3]\\nprint(arr[3])", maxScore: 20 },
-    { id: 4, text: "Fix syntax error: if x == 10\\n  print(\"yes\")", maxScore: 20 },
-    { id: 5, text: "Fix logic bug: def add(a,b):\\n  return a - b", maxScore: 20 }
-  ];
+  // Use shared question pool from configuration
+  const questions = window.CONFIG?.QUESTIONS_POOL || [];
   
   container.innerHTML = submission.answers.map((answer, index) => {
-    const question = sampleQuestions[index] || { text: `Question ${index + 1}`, maxScore: 20 };
-    const questionScore = submission.questionScores?.[index] || 0;
+    const question = questions[index] || {};
     
     // Handle answer objects {questionNo, questionText, answer} vs raw strings
     const answerText = typeof answer === 'object' ? (answer.answer || JSON.stringify(answer)) : String(answer);
+    
+    const safeTitle = escapeHtml(question.title || `Question ${index + 1}`);
+    const safeExpected = escapeHtml(question.expectedOutput || "N/A");
+    const safeInitial = escapeHtml(question.initialCode || "N/A");
     const safeAnswer = escapeHtml(answerText);
-    const safeQuestion = escapeHtml(question.text);
     
     return `
       <div class="question-item">
         <div class="question-header">
-          <div class="question-title">Question ${index + 1}: ${safeQuestion}</div>
+          <div class="question-title">Q${index + 1}: ${safeTitle}</div>
         </div>
-        <div class="question-text">
-          <strong>Answer:</strong>
+        
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
+          <div>
+            <div style="font-size: 11px; color: #9ca3af; margin-bottom: 5px; text-transform: uppercase; font-weight: bold; letter-spacing: 0.5px;">Original Buggy Code</div>
+            <div class="question-text" style="background: rgba(239, 68, 68, 0.05); border: 1px solid rgba(239, 68, 68, 0.2); border-radius: 6px; padding: 10px; font-family: 'Consolas', monospace; font-size: 12px; color: #fca5a5; margin-bottom: 0;">${safeInitial}</div>
+          </div>
+          <div>
+            <div style="font-size: 11px; color: #9ca3af; margin-bottom: 5px; text-transform: uppercase; font-weight: bold; letter-spacing: 0.5px;">Expected Output</div>
+            <div class="question-text" style="background: rgba(34, 197, 94, 0.05); border: 1px solid rgba(34, 197, 94, 0.2); border-radius: 6px; padding: 10px; font-family: 'Consolas', monospace; font-size: 12px; color: #86efac; margin-bottom: 0;">${safeExpected}</div>
+          </div>
         </div>
-        <div class="answer-code">${safeAnswer}</div>
+
+        <div style="font-size: 11px; color: #9ca3af; margin-bottom: 5px; text-transform: uppercase; font-weight: bold; letter-spacing: 0.5px;">Student's Submitted Fix</div>
+        <div class="answer-code" style="border: 2px solid rgba(34, 197, 94, 0.3); background: #0f172a; color: #f8fafc;">${safeAnswer}</div>
       </div>
     `;
   }).join('');

@@ -424,17 +424,7 @@ function startExam() {
 
 
 // ================= QUESTIONS =================
-const pool = [
-  `Fix this code:\n\nprint("Hello)`,
-
-  `Fix this loop:\n\nfor i in range(5)\n  print(i)`,
-
-  `Fix this array issue:\n\narr = [1,2,3]\nprint(arr[3])`,
-
-  `Fix syntax error:\n\nif x == 10\n  print("yes")`,
-
-  `Fix logic bug:\n\ndef add(a,b):\n  return a - b`
-];
+const pool = window.CONFIG?.QUESTIONS_POOL || [];
 
 
 // ================= TIMER =================
@@ -554,7 +544,7 @@ async function runCode(i) {
       },
       body: JSON.stringify({
         source_code: sanitizedCode,
-        language_id: 71, // Python
+        language_id: pool[i].languageId, 
         stdin: "",
         expected_output: "",
         cpu_time_limit: 2,
@@ -719,7 +709,7 @@ function submitExam() {
   editors.forEach((editor, i) => {
     responses.push({
       questionNo: i + 1,
-      questionText: pool[i],
+      questionText: pool[i].title,
       answer: editor.getValue()
     });
   });
@@ -772,7 +762,7 @@ function forceSubmit(reasonMsg, isMalpractice = true) {
   editors.forEach((editor, i) => {
     responses.push({
       questionNo: i + 1,
-      questionText: pool[i],
+      questionText: pool[i].title,
       answer: editor.getValue()
     });
   });
@@ -846,10 +836,13 @@ function loadQuestions() {
   const container = document.getElementById("questions");
 
   selected.forEach((q, i) => {
-    const safeQ = escapeHtml(q);
     container.innerHTML += `
       <div class="card">
-        <h3>Q${i+1}: ${safeQ}</h3>
+        <h3>Q${i+1}: ${escapeHtml(q.title)}</h3>
+        <p style="color: #94a3b8; font-size: 14px; margin-bottom: 15px;">
+          <strong style="color: #22c55e;">Expected Output:</strong><br>
+          <code style="background: rgba(0,0,0,0.3); padding: 5px 8px; border-radius: 4px; display: block; margin-top: 5px; white-space: pre-wrap; font-family: 'Consolas', monospace; color: #bbf7d0; border-left: 3px solid #22c55e;">${escapeHtml(q.expectedOutput)}</code>
+        </p>
         <div id="editor${i}" class="editor"></div>
         <button onclick="runCode(${i})">▶ Run Code</button>
         <pre id="out${i}">Output will appear here...</pre>
@@ -875,8 +868,8 @@ function loadEditors(count) {
   require(['vs/editor/editor.main'], function () {
     for (let i = 0; i < count; i++) {
       editors[i] = monaco.editor.create(document.getElementById('editor' + i), {
-        value: "# Write your fixed code here...",
-        language: "python",
+        value: pool[i].initialCode,
+        language: pool[i].language,
         theme: "vs-dark",
         automaticLayout: true,
         fontSize: 14,
