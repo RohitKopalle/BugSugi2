@@ -397,6 +397,10 @@ if (window.location.pathname.includes("exam.html")) {
           </div>`;
         // Prevent any further exam logic from running
         window.onbeforeunload = null;
+      } else {
+        // No submission in Firebase — clear stale timer data so exam starts fresh
+        localStorage.removeItem("examStartTime_" + loggedTeam);
+        localStorage.removeItem("examEndTime_" + loggedTeam);
       }
     }).catch(err => {
       console.error("Error checking submission status:", err);
